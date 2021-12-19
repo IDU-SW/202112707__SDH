@@ -41,17 +41,17 @@ function TodoList({todos, updateTodo, deleteTodo}) {
     )
 }
 
-function TodoHeader({todos}) {
+function TodoHeader({todos, deleteTodosComplete, deleteTodos}) {
     return (        
         <center>
             <h3>202112707 Todo App ( {todos.filter( item => item.done ).length } / {todos.length})</h3>        
             <button
                 style={{margin: "10px"}}
-                
+                onClick={ () => deleteTodosComplete()}
             > 완료 삭제</button>
             <button 
                 style={{margin: "10px"}}
-            
+                onClick={ () => deleteTodos()}
             > 전체 삭제</button>
         </center>
         
@@ -120,13 +120,16 @@ function App() {
         setTodos(todos.filter(todo => todo.id !== id));
     }, [todos]);
 
-    const deleteTodos = useCallback({
-
+    const deleteTodos = useCallback(_ => {
+        console.log("deleteTodosComplete");
+        setTodos([]);
     }, [todos]);
 
-    const deleteTodosComplete = useCallback({
-
+    const deleteTodosComplete = useCallback( _ => {
+        console.log("deleteTodosComplete");
+        setTodos(todos.filter(todo => !todo.done));
     }, [todos]);
+
     const updateTodo = useCallback(id => {
         console.log('updateTodo: id: ',id)
         setTodos(todos.map(todo => todo.id !== id ? todo: { ...todo, done: !todo.done}))
@@ -135,8 +138,14 @@ function App() {
     return (
         <center>
             <div>
-                <TodoHeader todos={todos} />
-                <TodoList todos={todos} deleteTodo = {deleteTodo} updateTodo={updateTodo}/>
+                <TodoHeader 
+                    todos={todos}
+                    deleteTodos={deleteTodos}
+                    deleteTodosComplete={deleteTodosComplete}/>
+                <TodoList 
+                    todos={todos} 
+                    deleteTodo = {deleteTodo} 
+                    updateTodo={updateTodo}/>
                 <NewTodoForm addTodo={handleTodoAdd}/>
             </div>
         </center>
