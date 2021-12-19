@@ -41,10 +41,14 @@ function TodoList({todos, updateTodo, deleteTodo}) {
     )
 }
 
-function TodoHeader({todos, deleteTodosComplete, deleteTodos}) {
+function TodoHeader({todos, deleteTodosComplete, deleteTodos, updateTodos}) {
     return (        
         <center>
             <h3>202112707 Todo App ( {todos.filter( item => item.done ).length } / {todos.length})</h3>        
+            <button
+                style={{margin: "10px"}}
+                onClick={ () => updateTodos()}
+            > {todos.length/2 < todos.filter(todo => todo.done).length ? "전체 해제" : "전체 완료"}</button>
             <button
                 style={{margin: "10px"}}
                 onClick={ () => deleteTodosComplete()}
@@ -103,9 +107,9 @@ function App() {
     ]);
     
     const id_autoIncrement = useRef(todos.length);
-    console.log('todos id:', id_autoIncrement);
 
-    const handleTodoAdd = useCallback(contents => {
+    const addTodo = useCallback(contents => {
+        console.log('addTodo: contents:',contents)
         id_autoIncrement.current += 1;
         const todoDTO = {
             id: id_autoIncrement.current,
@@ -113,15 +117,15 @@ function App() {
             done: false
         };
         setTodos(todos => todos.concat(todoDTO));
-        
     }, []);
 
     const deleteTodo = useCallback(id => {
+        console.log('deleteTodo: id: ',id)
         setTodos(todos.filter(todo => todo.id !== id));
     }, [todos]);
 
     const deleteTodos = useCallback(_ => {
-        console.log("deleteTodosComplete");
+        console.log("deleteTodos");
         setTodos([]);
     }, [todos]);
 
@@ -135,18 +139,25 @@ function App() {
         setTodos(todos.map(todo => todo.id !== id ? todo: { ...todo, done: !todo.done}))
     }, [todos]);
 
+    const updateTodos = useCallback(_ => {
+        console.log('updateTodos: ')
+        const flag = todos.length/2 < todos.filter(todo => todo.done).length
+
+        setTodos(todos.map(todo => flag ? {...todo, done: false}: {...todo, done: true}))
+    }, [todos]);
     return (
         <center>
             <div>
                 <TodoHeader 
                     todos={todos}
                     deleteTodos={deleteTodos}
-                    deleteTodosComplete={deleteTodosComplete}/>
+                    deleteTodosComplete={deleteTodosComplete}
+                    updateTodos={updateTodos}/>
                 <TodoList 
                     todos={todos} 
                     deleteTodo = {deleteTodo} 
                     updateTodo={updateTodo}/>
-                <NewTodoForm addTodo={handleTodoAdd}/>
+                <NewTodoForm addTodo={addTodo}/>
             </div>
         </center>
         
