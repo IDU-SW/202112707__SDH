@@ -45,7 +45,16 @@ function TodoHeader({todos}) {
     return (        
         <center>
             <h3>202112707 Todo App ( {todos.filter( item => item.done ).length } / {todos.length})</h3>        
+            <button
+                style={{margin: "10px"}}
+                
+            > 완료 삭제</button>
+            <button 
+                style={{margin: "10px"}}
+            
+            > 전체 삭제</button>
         </center>
+        
     )
 }
 
@@ -68,12 +77,19 @@ function NewTodoForm({addTodo}) {
             <form onSubmit={onAddButtonClicked}>
                 <div>
                     <input 
+                        style={
+                            {
+                                width: "270px",
+                                margin: "30px"
+                            }
+                        } 
                         placeholder = '할일을 입력하세요.'
                         onChange = {onChange}
                         value = {todo}
                         ref = {ref} />
+                
+                    <input type = 'submit' value = '추가' />
                 </div>
-                <input type = 'submit' value = '추가' />
             </form>
         </div>
     )
@@ -107,6 +123,7 @@ function App() {
     const deleteTodos = useCallback({
 
     }, [todos]);
+
     const deleteTodosComplete = useCallback({
 
     }, [todos]);
