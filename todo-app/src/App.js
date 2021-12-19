@@ -6,31 +6,24 @@ function TodoList({todos, updateTodo, deleteTodo}) {
         {todos.map( item => (
             <li style={{ padding: "1.5rem"}}
                 key={item.id}>
-
-                   
                 <input 
                     type="checkbox"
                     checked={item.done}
                     onChange={() => updateTodo(item.id)} /> 
-                
                 <div style={
                     item.done
                         ? {
-                            color: "",
                             borderBottom: "3px solid seagreen",
-
                             display: "inline-table",
                             padding: "1rem",
                             width: "250px",
                             color: "seagreen", 
                             textDecorationLine: "line-through"}
                         : { 
-                            
                             borderBottom: "3px solid slategray",
                             display: "inline-table", 
                             padding: "1rem", 
                             width: "250px"}
-                
                 }> {item.text} </div> 
                 <button style={{margin: "10px"}}
                     onClick={ () => deleteTodo(item.id)}> 삭제</button>
@@ -142,9 +135,9 @@ function App() {
     const updateTodos = useCallback(_ => {
         console.log('updateTodos: ')
         const flag = todos.length/2 < todos.filter(todo => todo.done).length
-
         setTodos(todos.map(todo => flag ? {...todo, done: false}: {...todo, done: true}))
     }, [todos]);
+    
     return (
         <center>
             <div>
