@@ -1,19 +1,39 @@
 import React, {useRef, useState, useCallback} from 'react';
 
-function TodoList({todos, complete}) {
+function TodoList({todos, updateTodo, deleteTodo}) {
     return (
         <ul style = {{listStyle: "none"}}>
         {todos.map( item => (
-            <li key={item.id}>
+            <li style={{ padding: "1.5rem"}}
+                key={item.id}>
 
                    
-                <input type="checkbox" checked={item.done} onChange={() => complete(item.id)} /> 
+                <input 
+                    type="checkbox"
+                    checked={item.done}
+                    onChange={() => updateTodo(item.id)} /> 
+                
                 <div style={
                     item.done
-                        ? {display: "inline-block", padding: "1rem", width: "250px", color: "lightsteelblue", textDecorationLine: "line-through"}
-                        : {display: "inline-block", padding: "1rem", width: "250px"}
+                        ? {
+                            color: "",
+                            borderBottom: "3px solid seagreen",
+
+                            display: "inline-table",
+                            padding: "1rem",
+                            width: "250px",
+                            color: "seagreen", 
+                            textDecorationLine: "line-through"}
+                        : { 
+                            
+                            borderBottom: "3px solid slategray",
+                            display: "inline-table", 
+                            padding: "1rem", 
+                            width: "250px"}
                 
                 }> {item.text} </div> 
+                <button style={{margin: "10px"}}
+                    onClick={ () => deleteTodo(item.id)}> 삭제</button>
             </li>
         ))
         }
@@ -65,21 +85,33 @@ function App() {
             {id: 2, text: 'study ReactNative', done: false},
             {id: 3, text: 'study node.js', done: true}
     ]);
-    console.log('todos count:', todos.count);
-    const count = useRef(4);
+    
+    const id_autoIncrement = useRef(todos.length);
+    console.log('todos id:', id_autoIncrement);
 
     const handleTodoAdd = useCallback(contents => {
+        id_autoIncrement.current += 1;
         const todoDTO = {
-            id: count.current,
+            id: id_autoIncrement.current,
             text: contents,
             done: false
         };
-
         setTodos(todos => todos.concat(todoDTO));
-        count.current += 1;
+        
     }, []);
 
-    const complete = useCallback(id => {
+    const deleteTodo = useCallback(id => {
+        setTodos(todos.filter(todo => todo.id !== id));
+    }, [todos]);
+
+    const deleteTodos = useCallback({
+
+    }, [todos]);
+    const deleteTodosComplete = useCallback({
+
+    }, [todos]);
+    const updateTodo = useCallback(id => {
+        console.log('updateTodo: id: ',id)
         setTodos(todos.map(todo => todo.id !== id ? todo: { ...todo, done: !todo.done}))
     }, [todos]);
 
@@ -87,7 +119,7 @@ function App() {
         <center>
             <div>
                 <TodoHeader todos={todos} />
-                <TodoList todos={todos} complete={complete}/>
+                <TodoList todos={todos} deleteTodo = {deleteTodo} updateTodo={updateTodo}/>
                 <NewTodoForm addTodo={handleTodoAdd}/>
             </div>
         </center>
